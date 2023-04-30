@@ -49,8 +49,7 @@ class BaseIPythonGPTCommand:
         openai_api_key = args.openai_api_key or self.context["config"]["openai_api_key"]
         assert bool(openai_api_key), "OPENAI_API_KEY missing"
         client = OpenAIClient(openai_api_key)
-        results = self._execute(client, args, line, cell)
-        return results
+        return self._execute(client, args, line, cell)
 
 
 class ChatCommand(BaseIPythonGPTCommand):
@@ -119,14 +118,13 @@ class ConfigCommand(BaseIPythonGPTCommand):
         if args.reset_conversation:
             self.context["message_history"] = []
 
-        response = f"""
+        return f"""
 ##### Conf set:
 
 * **Default model**: {self.context['config']['default_model']}
 * **Default system message**: {self.context['config']['default_system_message']}
 * **Chat history length**: {len(self.context['message_history'])}
 """
-        return response
 
 
 class ChatModelsBrowserCommand(BaseIPythonGPTCommand):

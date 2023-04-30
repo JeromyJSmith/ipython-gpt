@@ -51,13 +51,10 @@ class OpenAIClient:
         headers.setdefault("Authorization", f"Bearer {self.openai_api_key}")
         headers.setdefault("Content-Type", "application/json")
 
-        body = None
-        if json_body:
-            body = json.dumps(json_body)
-
-        path = f"/{self.api_version}" + path
+        body = json.dumps(json_body) if json_body else None
+        path = f"/{self.api_version}{path}"
         if query_params is not None:
-            path += "?" + urllib.parse.urlencode(query_params)
+            path += f"?{urllib.parse.urlencode(query_params)}"
 
         try:
             connection.request(method, path, body, headers)
